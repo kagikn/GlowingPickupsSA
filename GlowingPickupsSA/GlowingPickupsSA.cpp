@@ -203,56 +203,89 @@ void GlowingPickup::GlowCollectiblePickup(CEntity* pickupEntity)
     }
 }
 
+void GlowingPickup::GlowPickup(CPickup* pickup)
+{
+    if (pickup->m_nFlags.bDisabled || !pickup->m_nFlags.bVisible || !pickup->m_pObject)
+    {
+        return;
+    }
+
+    const auto pickupType = pickup->m_nPickupType;
+
+    if (pickup->m_nModelIndex == MODEL_CJ_HORSE_SHOE || pickup->m_nModelIndex == MODEL_CJ_OYSTER || pickup->m_nModelIndex == MODEL_CJ_OYSTER_2)
+    {
+        GlowCollectiblePickup(pickup->m_pObject);
+    }
+    else if (pickup->m_nModelIndex == MODEL_MONEY)
+    {
+        GlowMoneyPickup(pickup->m_pObject);
+    }
+    else if (pickupType != PICKUP_NONE)
+    {
+        auto modelIndex = pickup->m_pObject->m_nModelIndex;
+
+        auto iteratorForIgnoredModels = ModelsToIgnore.find(modelIndex);
+        const int& WeaponIDPlayerIsAiming = *(int*)0xB6F1A8;
+
+        if (iteratorForIgnoredModels != ModelsToIgnore.end()
+            || (pickup->m_nModelIndex == MODEL_CAMERAPICKUP && WeaponIDPlayerIsAiming != 46))
+        {
+            return;
+        }
+
+        auto it1 = centerGlowingOnlyModels.find(modelIndex);
+
+        auto it2 = pickupWeaponModelAndColorMap.find(modelIndex);
+        const Color color = it2 == pickupWeaponModelAndColorMap.end() ? PickupColorList::Default : it2->second;
+
+        if (it1 == centerGlowingOnlyModels.end())
+        {
+            GlowNormalPickup(pickup->m_pObject, color);
+        }
+        else
+        {
+            GlowNormalPickupCenter(pickup->m_pObject, color);
+        }
+    }
+}
+
+// In the stock game, the pickup limit is 620 and the CPickup pool address is 0x9788C0.
+// However, retrieving these value dynamically makes this mod more compatible with other mods such as fastman92 limit adjuster.
+bool hasCheckedGameEnvironment = false;
+unsigned int pickupCountLimit = 620;
+bool isFlaLoaded = false;
+int* pickupPoolAddress = *reinterpret_cast<int**>(0x4020BC);
 
 void GlowingPickup::Main()
 {
-    constexpr int PICKUP_LIMIT = 620;
-
-    for (int i = 0; i < PICKUP_LIMIT; i++)
+    if (!hasCheckedGameEnvironment)
     {
-        CPickup& pickup = CPickups::aPickUps[i];
+        // The CPickup limit is placed as a immediate value in the game assembly
+        pickupCountLimit = *reinterpret_cast<unsigned int*>(0x456FF6);
 
-        if (pickup.m_nFlags.bDisabled || !pickup.m_nFlags.bVisible || !pickup.m_pObject)
+        if (GetModuleHandle("$fastman92limitAdjuster.asi"))
         {
-            continue;
+            isFlaLoaded = true;
         }
 
-        const auto pickupType = pickup.m_nPickupType;
-        
-        if (pickup.m_nModelIndex == MODEL_CJ_HORSE_SHOE || pickup.m_nModelIndex == MODEL_CJ_OYSTER || pickup.m_nModelIndex == MODEL_CJ_OYSTER_2)
+        hasCheckedGameEnvironment = true;
+    }
+
+    for (unsigned int i = 0; i < pickupCountLimit; i++)
+    {
+        if (isFlaLoaded)
         {
-            GlowCollectiblePickup(pickup.m_pObject);
+            CPickupFla* aPickUpFlas = reinterpret_cast<CPickupFla*>(pickupPoolAddress);
+            CPickup* pickup = reinterpret_cast<CPickup*>(&aPickUpFlas[i]);
+
+            GlowPickup(pickup);
         }
-        else if (pickup.m_nModelIndex == MODEL_MONEY)
+        else
         {
-            GlowMoneyPickup(pickup.m_pObject);
-        }
-        else if (pickupType != PICKUP_NONE)
-        {
-            auto modelIndex = pickup.m_pObject->m_nModelIndex;
+            CPickup* aPickUps = reinterpret_cast<CPickup*>(pickupPoolAddress);
+            CPickup* pickup = reinterpret_cast<CPickup*>(&aPickUps[i]);
 
-            auto iteratorForIgnoredModels = ModelsToIgnore.find(modelIndex);
-            const int& WeaponIDPlayerIsAiming = *(int*)0xB6F1A8;
-                 
-            if (iteratorForIgnoredModels != ModelsToIgnore.end()
-                || (pickup.m_nModelIndex == MODEL_CAMERAPICKUP && WeaponIDPlayerIsAiming != 46))
-            {
-                continue;
-            }
-
-            auto it1 = centerGlowingOnlyModels.find(modelIndex);
-
-            auto it2 = pickupWeaponModelAndColorMap.find(modelIndex);
-            const Color color = it2 == pickupWeaponModelAndColorMap.end() ? PickupColorList::Default : it2->second;
-
-            if (it1 == centerGlowingOnlyModels.end())
-            {
-                GlowNormalPickup(pickup.m_pObject, color);
-            }
-            else
-            {
-                GlowNormalPickupCenter(pickup.m_pObject, color);
-            }
+            GlowPickup(pickup);
         }
     }
 }

@@ -3,6 +3,7 @@
 #include "common.h"
 #include <unordered_map>
 #include <unordered_set>
+#include "CPickup.h"
 
 struct Color
 {
@@ -53,6 +54,30 @@ public:
     inline static Color Special2 = Color(0x3A, 0x3D, 0xD9);
 };
 
+class CPickupFla {
+public:
+    float             m_fRevenueValue;
+    CObject* m_pObject;
+    unsigned int      m_nAmmo;
+    unsigned int      m_nRegenerationTime;
+    CompressedVector  m_vecPos;
+    unsigned short    m_nMoneyPerDay;
+    short             m_nModelIndex;
+    short             m_nReferenceIndex;
+    unsigned char     m_nPickupType; // see ePickupType
+    struct {
+        unsigned char   bDisabled : 1; // waiting for regeneration
+        unsigned char   bEmpty : 1; // no ammo
+        unsigned char   bHelpMessageDisplayed : 1;
+        unsigned char   bVisible : 1;
+        unsigned char   nPropertyTextIndex : 3; // see enum ePickupPropertyText
+    }                 m_nFlags;
+    char _pad1E[2];
+    int32_t x, y, z;
+
+    static CPickupFla* aPickUps;
+};
+
 class GlowingPickup {
 public:
     // pickup colors in VC are defined for model IDs. Changing the weapon slot of a specific weapon doesn't change the pickup color. 
@@ -94,6 +119,7 @@ public:
 
     GlowingPickup();
     static void Main();
+    static void GlowPickup(CPickup* pickup);
     static void GlowNormalPickup(CEntity* pickupEntity, Color color);
     static void GlowNormalPickupCenter(CEntity* pickupEntity, Color color);
     static void GlowMoneyPickup(CEntity* moneyPickupEntity);
