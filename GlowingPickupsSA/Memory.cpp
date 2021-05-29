@@ -1,6 +1,5 @@
 #include "Memory.h"
 
-#include <Windows.h>
 #include <psapi.h>
 #include <sstream>
 #include <string>
@@ -49,12 +48,12 @@ template<class T> std::vector<std::string> split(const std::string& s, const T& 
 }
 
 
-uintptr_t memory::FindPattern(const char* pattStr)
+uintptr_t memory::FindPattern(const char* pattStr, HMODULE moduleHandle)
 {
     std::vector<std::string> bytesStr = split(pattStr, ' ');
 
     MODULEINFO modInfo{};
-    GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &modInfo, sizeof(MODULEINFO));
+    GetModuleInformation(GetCurrentProcess(), moduleHandle, &modInfo, sizeof(MODULEINFO));
 
     auto* start_offset = static_cast<uint8_t*>(modInfo.lpBaseOfDll);
     const auto size = static_cast<uintptr_t>(modInfo.SizeOfImage);

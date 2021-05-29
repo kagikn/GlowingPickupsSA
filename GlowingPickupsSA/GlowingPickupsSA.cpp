@@ -255,20 +255,25 @@ void GlowingPickup::GlowPickup(CPickup* pickup)
 bool hasCheckedGameEnvironment = false;
 unsigned int pickupCountLimit = 620;
 bool isFlaPatchedCPickup = false;
-int* pickupPoolAddress = *reinterpret_cast<int**>(0x4020BC);
+int* pickupPoolAddress;
 
 void GlowingPickup::Main()
 {
     if (!hasCheckedGameEnvironment)
     {
         // The CPickup limit is placed as a immediate value in the game assembly
+        pickupPoolAddress = *reinterpret_cast<int**>(0x4020BC);
         pickupCountLimit = *reinterpret_cast<unsigned int*>(0x456FF6);
+        auto flaModuleHandle = GetModuleHandle("$fastman92limitAdjuster.asi");
 
-        if (GetModuleHandle("$fastman92limitAdjuster.asi"))
+        if (flaModuleHandle)
         {
-            // Find flag for "Enable pickup limit patch"
-            auto address = memory::FindPattern("80 7E ?? 00 74 ?? 8B ?? ?? E9 ?? ?? ?? ??");
-            if (address && *reinterpret_cast<char*>(address + 2) != 0)
+            auto address = memory::FindPattern("84 ?? 74 ?? 6A ?? B9 ?? ?? ?? ?? E8 ?? ?? ?? ?? 6A 00 68 ?? ?? ?? ??", flaModuleHandle);
+            auto settingDataOffset = *reinterpret_cast<uintptr_t*>(address + 7);
+            address = memory::FindPattern("80 7E ?? 00 74 ?? 8B ?? ?? E9 ?? ?? ?? ??", flaModuleHandle);
+            auto pickupFlagPatchOffset = *reinterpret_cast<unsigned char*>(address + 2);
+
+            if (address && *reinterpret_cast<unsigned char*>(settingDataOffset + pickupFlagPatchOffset) != 0)
             {
                 isFlaPatchedCPickup = true;
             }
