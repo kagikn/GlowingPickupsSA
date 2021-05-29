@@ -102,9 +102,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GlowingPickupsSA.cpp" />
+    <ClCompile Include="Memory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlowingPickupsSA.h" />
+    <ClInclude Include="Memory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

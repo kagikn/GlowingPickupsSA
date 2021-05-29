@@ -7,6 +7,7 @@
 #include "CPointLights.h"
 #include "CCamera.h"
 #include "CModelInfo.h"
+#include "Memory.h"
 
 void GlowingPickup::GlowNormalPickup(CEntity* pickupEntity, Color color)
 {
@@ -253,7 +254,7 @@ void GlowingPickup::GlowPickup(CPickup* pickup)
 // However, retrieving these value dynamically makes this mod more compatible with other mods such as fastman92 limit adjuster.
 bool hasCheckedGameEnvironment = false;
 unsigned int pickupCountLimit = 620;
-bool isFlaLoaded = false;
+bool isFlaPatchedCPickup = false;
 int* pickupPoolAddress = *reinterpret_cast<int**>(0x4020BC);
 
 void GlowingPickup::Main()
@@ -265,7 +266,12 @@ void GlowingPickup::Main()
 
         if (GetModuleHandle("$fastman92limitAdjuster.asi"))
         {
-            isFlaLoaded = true;
+            // Find flag for "Enable pickup limit patch"
+            auto address = memory::FindPattern("80 7E ?? 00 74 ?? 8B ?? ?? E9 ?? ?? ?? ??");
+            if (address && *reinterpret_cast<char*>(address + 2) != 0)
+            {
+                isFlaPatchedCPickup = true;
+            }
         }
 
         hasCheckedGameEnvironment = true;
@@ -273,7 +279,7 @@ void GlowingPickup::Main()
 
     for (unsigned int i = 0; i < pickupCountLimit; i++)
     {
-        if (isFlaLoaded)
+        if (isFlaPatchedCPickup)
         {
             CPickupFla* aPickUpFlas = reinterpret_cast<CPickupFla*>(pickupPoolAddress);
             CPickup* pickup = reinterpret_cast<CPickup*>(&aPickUpFlas[i]);
