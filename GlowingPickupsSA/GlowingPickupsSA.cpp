@@ -265,7 +265,7 @@ void GlowingPickup::Main()
         //pickupPoolAddress = *reinterpret_cast<int**>(0x5D3542);
         pickupPoolAddress = injector::ReadMemory<int*>(0x5D3542 + 1, true);
         //pickupCountLimit = *reinterpret_cast<unsigned int*>(0x456FF6);
-        pickupCountLimit = injector::ReadMemory<int>(0x456FF6, true);
+        pickupCountLimit = injector::ReadMemory<int>(0x456FF6 + 1, true);
         auto flaModuleHandle = GetModuleHandle("$fastman92limitAdjuster.asi");
 
         if (flaModuleHandle)
