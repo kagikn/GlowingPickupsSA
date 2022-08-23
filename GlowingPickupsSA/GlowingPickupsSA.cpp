@@ -262,10 +262,8 @@ void GlowingPickup::Main()
     if (!hasCheckedGameEnvironment)
     {
         // The CPickup limit is placed as a immediate value in the game assembly
-        //pickupPoolAddress = *reinterpret_cast<int**>(0x5D3542);
-        pickupPoolAddress = injector::ReadMemory<int*>(0x5D3542 + 1, true);
-        //pickupCountLimit = *reinterpret_cast<unsigned int*>(0x456FF6);
-        pickupCountLimit = injector::ReadMemory<int>(0x456FF6 + 1, true);
+        pickupPoolAddress = reinterpret_cast<int*>(injector::ReadMemory<int>(0x48ADC3, true));
+        pickupCountLimit = injector::ReadMemory<int>(0x456FF6, true);
         auto flaModuleHandle = GetModuleHandle("$fastman92limitAdjuster.asi");
 
         if (flaModuleHandle)
