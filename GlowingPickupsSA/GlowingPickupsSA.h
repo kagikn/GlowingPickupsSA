@@ -32,14 +32,14 @@ public:
 
     inline static Color Default = Color(0x80, 0x80, 0x80);
     inline static Color MeleeWeapons = Color(0x61, 0xC2, 0xF7);
-    inline static Color ThrownWeapons = Color(0x1B, 0x59, 0x82); //this value is also used for missiles in VC
+    inline static Color ThrownWeapons = Color(0x1B, 0x59, 0x82); // This value is also used for missiles in VC
     inline static Color Handguns = Color(0x95, 0xC2, 0x18);
     inline static Color Shotguns = Color(0x2D, 0x9B, 0x5A);
     inline static Color SubmachineGuns = Color(0xFF, 0xE3, 0x4F);
     inline static Color AssaultRifles = Color(0xFE, 0x89, 0x00);
     inline static Color SniperRifles = Color(0xF9, 0x83, 0xD7);
     inline static Color HeavyWeapons = Color(0xA4, 0x28, 0xB2);
-    inline static Color MiscWeapons = Color(0x45, 0x45, 0x45); //This value seems to be used for detonators and cameras in VC
+    inline static Color MiscWeapons = Color(0x45, 0x45, 0x45); // This value seems to be used for detonators and cameras in VC
     inline static Color Health = Color(0xFF, 0x64, 0x64);
     inline static Color BodyArmor = Color(0x80, 0xFF, 0x80);
     inline static Color PropertySale = Color(0x64, 0xFF, 0x64);

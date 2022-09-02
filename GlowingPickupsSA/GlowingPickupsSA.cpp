@@ -11,17 +11,17 @@
 
 void GlowingPickup::GlowNormalPickup(CEntity* pickupEntity, Color color)
 {
-    const auto grobalTimer = CTimer::m_snTimeInMilliseconds;    
+    const auto grobalTimer = CTimer::m_snTimeInMilliseconds;
     const auto glowingStage = static_cast<unsigned char>((grobalTimer >> 9) & 7);
 
     bool glowOuterRing = false;
     bool glowInnerRing = false;
-    
+
     if (glowingStage >= 3)
     {
         if(glowingStage == 3)
         {
-            //Probably the same random function that is used in DoPickUpEffects(0x43F050 in v1.0) in VC 
+            // Probably the same random function that is used in DoPickUpEffects(0x43F050 in v1.0) in VC
             glowOuterRing = (rand() & 3) != 0;
         }
         else
@@ -36,7 +36,7 @@ void GlowingPickup::GlowNormalPickup(CEntity* pickupEntity, Color color)
     {
         if (glowingStage2 == 3)
         {
-            //Probably the same random function that is used in DoPickUpEffects(0x43F050 in v1.0) in VC 
+            // Probably the same random function that is used in DoPickUpEffects(0x43F050 in v1.0) in VC
             glowInnerRing = (rand() & 3) != 0;
         }
         else
@@ -92,7 +92,7 @@ void GlowingPickup::GlowNormalPickup(CEntity* pickupEntity, Color color)
     {
         return;
     }
-    for(int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
     {
         const auto boundBox = CModelInfo::ms_modelInfoPtrs[pickupEntity->m_nModelIndex]->m_pColModel->m_boundBox;
         const auto vecDifferenceX = boundBox.m_vecMax.x - boundBox.m_vecMin.x;
@@ -144,7 +144,7 @@ void GlowingPickup::GlowNormalPickupCenter(CEntity* pickupEntity, Color color)
 
 void GlowingPickup::GlowMoneyPickup(CEntity* moneyPickupEntity)
 {
-    const auto theCam = reinterpret_cast<CCamera*>(0xB6F028); //The camera address is the same among v1.0 and v1.01, but plugin-sdk supports TheCamera only for 1.0US  
+    const auto theCam = reinterpret_cast<CCamera*>(0xB6F028); // The camera address is the same among v1.0 and v1.01, but plugin-sdk supports TheCamera only for 1.0US
     const float distance = DistanceBetweenPoints(theCam->m_matrix->pos, moneyPickupEntity->m_matrix->pos);
     
     if (distance < 20.0f)
@@ -176,7 +176,7 @@ void GlowingPickup::GlowMoneyPickup(CEntity* moneyPickupEntity)
 
 void GlowingPickup::GlowCollectiblePickup(CEntity* pickupEntity)
 {
-    const auto theCam = reinterpret_cast<CCamera*>(0xB6F028); //The camera address is the same among v1.0 and v1.01, but plugin-sdk supports TheCamera only for 1.0US  
+    const auto theCam = reinterpret_cast<CCamera*>(0xB6F028); // The camera address is the same among v1.0 and v1.01, but plugin-sdk supports TheCamera only for 1.0US
     const float distance = DistanceBetweenPoints(theCam->m_matrix->pos, pickupEntity->m_matrix->pos);
 
     if (distance <= 14.0f)
