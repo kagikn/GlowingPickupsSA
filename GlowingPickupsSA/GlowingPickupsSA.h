@@ -41,6 +41,7 @@ public:
     inline static Color HeavyWeapons = Color(0xA4, 0x28, 0xB2);
     inline static Color MiscWeapons = Color(0x45, 0x45, 0x45); // This value seems to be used for detonators and cameras in VC
     inline static Color Health = Color(0xFF, 0x64, 0x64);
+    inline static Color PickupGeneric = Color(0xFF, 0x0C, 0x00)
     inline static Color BodyArmor = Color(0x80, 0xFF, 0x80);
     inline static Color PropertySale = Color(0x64, 0xFF, 0x64);
     inline static Color PropertyLocked = Color(0x64, 0x64, 0xFF);
@@ -99,11 +100,11 @@ public:
        {MODEL_GUN_DILDO1, PickupColorList::Gifts}, {MODEL_GUN_DILDO2, PickupColorList::Gifts}, {MODEL_GUN_VIBE1, PickupColorList::Gifts},
         {MODEL_GUN_VIBE2, PickupColorList::Gifts}, {MODEL_FLOWERA, PickupColorList::Gifts}, {MODEL_GUN_CANE, PickupColorList::Gifts},
        {MODEL_NVGOGGLES, PickupColorList::Special2}, {MODEL_IRGOGGLES, PickupColorList::Special2}, {MODEL_GUN_PARA, PickupColorList::Special2},
-       {MODEL_JETPACK, PickupColorList::MiscWeapons}, {MODEL_HEALTH, PickupColorList::Health}, {MODEL_BODYARMOUR, PickupColorList::BodyArmor},
-       {MODEL_PROPERTY_FSALE, PickupColorList::PropertySale}, {MODEL_PROPERTY_LOCKED, PickupColorList::PropertyLocked}, 
-       {MODEL_BRIBE, PickupColorList::Yellow}, {MODEL_BIGDOLLAR, PickupColorList::Yellow}, {MODEL_INFO, PickupColorList::Yellow},
-       {MODEL_PICKUPSAVE, PickupColorList::PropertyLocked}, {MODEL_CLOTHESP, PickupColorList::PropertyLocked},
-       {MODEL_CAMERAPICKUP, PickupColorList::Purple},
+       {MODEL_JETPACK, PickupColorList::MiscWeapons}, {MODEL_HEALTH, PickupColorList::PickupGeneric}, {MODEL_BODYARMOUR, PickupColorList::BodyArmor},
+       {MODEL_PROPERTY_FSALE, PickupColorList::PickupGeneric}, {MODEL_PROPERTY_LOCKED, PickupColorList::PickupGeneric}, 
+       {MODEL_BRIBE, PickupColorList::PickupGeneric}, {MODEL_BIGDOLLAR, PickupColorList::PickupGeneric}, {MODEL_INFO, PickupColorList::PickupGeneric},
+       {MODEL_PICKUPSAVE, PickupColorList::PropertyLocked}, {MODEL_CLOTHESP, PickupColorList::PickupGeneric},
+       {MODEL_CAMERAPICKUP, PickupColorList::PickupGeneric},
 
        {MODEL_BONUS, PickupColorList::Health},
     };
